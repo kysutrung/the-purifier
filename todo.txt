@@ -1,0 +1,6 @@
+DỰ ÁN: MÁY LỌC KHÔNG KHÍ IOT
+
+- Đọc cùng lúc tất cả các cảm biến nhiệt độ, độ ẩm, khí độc, bụi mịn.
+- Hiển thị tất cả các thông số trên lên màn hình TFT 2.88
+- Gửi một mảng số float ghi tất cả các thông số trên qua TX RX từ arduino mega đến esp32
+- Kết nối và đẩy các thông số lên trên blynk
