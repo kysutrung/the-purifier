@@ -1,6 +1,12 @@
 DỰ ÁN: MÁY LỌC KHÔNG KHÍ IOT
 
-- Đọc cùng lúc tất cả các cảm biến nhiệt độ, độ ẩm, khí độc, bụi mịn.
-- Hiển thị tất cả các thông số trên lên màn hình TFT 2.88
 - Gửi một mảng số float ghi tất cả các thông số trên qua TX RX từ arduino mega đến esp32
+- Hiển thị tất cả các thông số trên lên màn hình TFT 2.88 cắm với esp32
+- Làm nút bấm: ON/OFF cứng để bật tắt nguồn, nút AUTO để chuyển hoàn toàn sang chế độ auto lọc dựa trên
+thông số cảm biến, nút MANUAL dùng để điều chỉnh hẹn thời gian lọc 2 4 6 8 tiếng
+
 - Kết nối và đẩy các thông số lên trên blynk
+
+- Thiết kế bảng mạch
+- Thiết kế thân vỏ
+- Làm giao diện màn hình đẹp lịch sự
