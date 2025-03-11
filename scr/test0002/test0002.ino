@@ -4,11 +4,17 @@
 // Khởi tạo màn hình TFT
 TFT_eSPI tft = TFT_eSPI();
 
-// Định nghĩa chân UART2 trên ESP32
+// Định nghĩa chân
 #define RXD2 16  
 #define TXD2 17
 
 #define RELAY01 32
+#define RELAY02 33
+
+#define BUTTON_A 25  
+#define BUTTON_B 27 
+
+int sysMode = 0;  // Biến số lưu giá trị
 
 // Khai báo 6 biến float để lưu dữ liệu
 float var1, var2, var3, var4, var5, var6;
@@ -25,7 +31,7 @@ void initTFT() {
 // Hàm nhận dữ liệu từ Serial2
 bool receiveFloatArray(float* buffer) {
     static bool receiving = false;
-    static uint8_t dataBuffer[24];  // ✅ Dùng kích thước cố định
+    static uint8_t dataBuffer[24]; 
     static int index = 0;
 
     while (Serial2.available()) {
@@ -74,15 +80,48 @@ void displayOnTFT() {
     tft.printf("Dust Density: %.2f\n", var6);
 }
 
-void setup() {
-    pinMode(RELAY01, OUTPUT);
+void getButton(){
+  if(digitalRead(BUTTON_A) == LOW) {  // Nếu nút A được nhấn
+    sysMode = 2;
+  }
+  if(digitalRead(BUTTON_B) == LOW) {  // Nếu nút B được nhấn
+    sysMode = 4;
+  }
+  if(digitalRead(BUTTON_A) == LOW && digitalRead(BUTTON_B) == LOW){
+    sysMode = sysMode;
+  }
+}
+
+void setRelay(int n){
+  if(n == 2){
     digitalWrite(RELAY01, 0);
+    digitalWrite(RELAY02, 0);
+  }
+  else{
+    digitalWrite(RELAY01, 1);
+    digitalWrite(RELAY02, 1);
+  }
+}
+
+void setup() {
+    pinMode(BUTTON_A, INPUT_PULLUP);
+    pinMode(BUTTON_B, INPUT_PULLUP);
+
+    pinMode(RELAY01, OUTPUT);
+    pinMode(RELAY02, OUTPUT);
+    digitalWrite(RELAY01, 1);
+    digitalWrite(RELAY02, 1);
+
     Serial.begin(115200);  
     Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2);  
     initTFT();  // Khởi tạo màn hình TFT
 }
 
 void loop() {
+
+    getButton();
+    setRelay(sysMode);
+
     float receivedData[6];
 
     if (receiveFloatArray(receivedData)) {  // Nếu nhận thành công
