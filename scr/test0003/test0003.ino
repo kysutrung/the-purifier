@@ -13,8 +13,11 @@ const int pinVo = A0;   // Đọc tín hiệu bụi
 const int pinLed = 2;   // Điều khiển LED
 const float kFactor = 0.5; // Hệ số hiệu chỉnh theo datasheet
 
+float data[6] = {3, 3, 3, 3, 3, 3};
+
 void setup() {
     Serial.begin(115200);
+    Serial1.begin(9600);   // UART1 để gửi sang ESP32
     Wire.begin();
 
     // Khởi động ENS160
@@ -53,31 +56,22 @@ float readDustDensity() {
 }
 
 void loop() {
-    // Đọc cảm biến ENS160
-    Serial.print("AQI: ");
-    Serial.println(ens160.getAQI());
+    //đo
+    data[0] = ens160.getAQI();
+    data[1] = ens160.getTVOC();
+    data[2] = ens160.getECO2();
 
-    Serial.print("TVOC (ppb): ");
-    Serial.println(ens160.getTVOC());
-
-    Serial.print("eCO2 (ppm): ");
-    Serial.println(ens160.getECO2());
-
-    // Đọc cảm biến AHT21
     sensors_event_t humidity, temp;
     aht21.getEvent(&humidity, &temp);
 
-    Serial.print("Nhiệt độ (°C): ");
-    Serial.println(temp.temperature, 1);
+    data[3] = temp.temperature;
+    data[4] = humidity.relative_humidity;
 
-    Serial.print("Độ ẩm (%RH): ");
-    Serial.println(humidity.relative_humidity, 1);
+    data[5] = readDustDensity();
 
-    // Đọc cảm biến bụi GP2Y1014AU0F
-    float dust = readDustDensity();
-    Serial.print("Mật độ bụi (mg/m³): ");
-    Serial.println(dust);
-
-    Serial.println("--------------------");
+    //gửi
+    Serial1.write('<');  // Gửi ký tự bắt đầu
+    Serial1.write((uint8_t*)data, sizeof(data));  // Gửi mảng float dạng nhị phân
+    Serial1.write('>');  // Gửi ký tự kết thúc
     delay(2000); // Đợi 2 giây trước khi đọc lại
 }
