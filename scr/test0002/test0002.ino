@@ -1,3 +1,4 @@
+//FOR E
 #include <TFT_eSPI.h>  // Thư viện màn hình TFT
 #include <SPI.h>
 
@@ -12,7 +13,8 @@ TFT_eSPI tft = TFT_eSPI();
 #define RELAY02 33
 
 #define BUTTON_A 25  
-#define BUTTON_B 27 
+#define BUTTON_B 26  
+#define BUTTON_C 27 
 
 int sysMode = 0;  // Biến số lưu giá trị
 
@@ -106,6 +108,7 @@ void setRelay(int n){
 void setup() {
     pinMode(BUTTON_A, INPUT_PULLUP);
     pinMode(BUTTON_B, INPUT_PULLUP);
+    pinMode(BUTTON_C, INPUT_PULLUP);
 
     pinMode(RELAY01, OUTPUT);
     pinMode(RELAY02, OUTPUT);
@@ -115,6 +118,10 @@ void setup() {
     Serial.begin(115200);  
     Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2);  
     initTFT();  // Khởi tạo màn hình TFT
+
+    tft.fillScreen(TFT_BLACK);
+    tft.setCursor(10, 10);
+    tft.printf("TESTTTTT");
 }
 
 void loop() {
