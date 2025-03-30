@@ -28,9 +28,12 @@ TFT_eSPI tft = TFT_eSPI();
 #define BUTTON_C 27 
 
 // Global Var
+bool isConnected = false;
+
 int sysMode = 0;
 int lastSysMode = 8;
 int ionModuleMode = 0;
+int lastIonMode = 9;
 int airState = 0;
 
 int blynkVar1 = 0;
@@ -13428,6 +13431,15 @@ void initTFT() {
     tft.setTextSize(2);
 }
 
+void checkWiFi() {
+  if (WiFi.status() != WL_CONNECTED) {
+    isConnected = false;
+  } else {
+    isConnected = true;
+  }
+}
+
+
 bool receiveFloatArray(float* buffer) {
     static bool receiving = false;
     static uint8_t dataBuffer[24]; 
@@ -13607,7 +13619,10 @@ void setup() {
 }
 
 void loop() {
-    Blynk.run();
+    checkWiFi();
+    if (isConnected) {
+      Blynk.run();
+    }
     getButton();
     sensorUpdate();
     numbersProcess();
@@ -13622,10 +13637,11 @@ void loop() {
       digitalWrite(RELAY02, 1);
     }
 
-    if(lastSysMode != sysMode)
+    if(lastSysMode != sysMode || lastIonMode != ionModuleMode)
     {
       displayOnTFT();
       lastSysMode = sysMode;
+      lastIonMode = ionModuleMode;
     }
 }
 
