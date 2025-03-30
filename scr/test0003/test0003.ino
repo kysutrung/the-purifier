@@ -74,5 +74,5 @@ void loop() {
     Serial1.write('<');  // Gửi ký tự bắt đầu
     Serial1.write((uint8_t*)data, sizeof(data));  // Gửi mảng float dạng nhị phân
     Serial1.write('>');  // Gửi ký tự kết thúc
-    delay(500);
+    delay(20000);
 }

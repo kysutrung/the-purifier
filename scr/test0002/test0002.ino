@@ -3,10 +3,20 @@
 #include <SPI.h>
 #include <pgmspace.h>  // Để đọc dữ liệu từ PROGMEM
 
+#define BLYNK_PRINT Serial
+#define BLYNK_TEMPLATE_ID "TMPL6NK5VD67Q"
+#define BLYNK_TEMPLATE_NAME "May Loc Khong Khi IOT"
+#define BLYNK_AUTH_TOKEN "6DtBQn6E-KvSZOnjofDFNpBAZQFlTFZf"
+#include <BlynkSimpleEsp32.h>
+#include <WiFi.h>
+
+char ssid[] = "Do An Tot Nghiep";
+char pass[] = "manhlamduc";
+
 // Khởi tạo màn hình TFT
 TFT_eSPI tft = TFT_eSPI();
 
-// Định nghĩa chân
+// Định nghĩa chân 
 #define RXD2 16  
 #define TXD2 17
 
@@ -17,17 +27,19 @@ TFT_eSPI tft = TFT_eSPI();
 #define BUTTON_B 26  
 #define BUTTON_C 27 
 
+// Global Var
 int sysMode = 0;
+int lastSysMode = 8;
 int ionModuleMode = 0;
 int airState = 0;
 
-// Khai báo 6 biến float để lưu dữ liệu
+int blynkVar1 = 0;
+
 float var1, var2, var3, var4, var5, var6;
 
 #define IMG_WIDTH  310  
 #define IMG_HEIGHT 230
 
-// 'trangThaiTot', 310x230px
 const uint16_t trangThaiTot [] PROGMEM = {
 	0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
 	0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
@@ -4488,7 +4500,6 @@ const uint16_t trangThaiTot [] PROGMEM = {
 	0x0000, 0x0000, 0x0000, 0x0000
 };
 
-// 'trangThaiNguyHiem', 310x230px
 const uint16_t trangThaiNguyHiem [] PROGMEM = {
 	0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
 	0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
@@ -8949,7 +8960,6 @@ const uint16_t trangThaiNguyHiem [] PROGMEM = {
 	0x0000, 0x0000, 0x0000, 0x0000
 };
 
-// 'trangThaiONhiem', 310x230px
 const uint16_t trangThaiONhiem [] PROGMEM = {
 	0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
 	0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
@@ -13410,7 +13420,6 @@ const uint16_t trangThaiONhiem [] PROGMEM = {
 	0x0000, 0x0000, 0x0000, 0x0000
 };
 
-// Hàm khởi tạo màn hình TFT
 void initTFT() {
     tft.init();
     tft.setRotation(1);
@@ -13419,7 +13428,6 @@ void initTFT() {
     tft.setTextSize(2);
 }
 
-// Hàm nhận dữ liệu từ Serial2
 bool receiveFloatArray(float* buffer) {
     static bool receiving = false;
     static uint8_t dataBuffer[24]; 
@@ -13444,7 +13452,6 @@ bool receiveFloatArray(float* buffer) {
     return false;
 }
 
-// Hàm cập nhật giá trị vào biến
 void updateVariables(float* buffer) {
     var1 = buffer[0]; //AQI
     var2 = buffer[1]; //TVOC
@@ -13453,8 +13460,6 @@ void updateVariables(float* buffer) {
     var5 = buffer[4]; //do am
     var6 = buffer[5]; //bui
 }
-
-// Hàm hiển thị dữ liệu lên màn hình TFT
 void displayOnTFT() {
     tft.fillScreen(TFT_BLACK);
 
@@ -13504,10 +13509,12 @@ void getButton(){
 
   if(digitalRead(BUTTON_C) == LOW) { 
     sysMode = 2;
+    Blynk.virtualWrite(V6, 1);
   }
 
   if(digitalRead(BUTTON_B) == LOW) { 
     sysMode = 4;
+    Blynk.virtualWrite(V6, 0);
   }
 
   bool lastState = 1;
@@ -13527,12 +13534,19 @@ void getButton(){
   }
 }
 
-void uartUpdate(){
+void sensorUpdate(){
   float receivedData[6];
 
   if (receiveFloatArray(receivedData)) {  // Nếu nhận thành công
       updateVariables(receivedData);  // Cập nhật biến
       displayOnTFT();
+
+      Blynk.virtualWrite(V0, var1);
+      Blynk.virtualWrite(V1, var2);
+      Blynk.virtualWrite(V2, var3);
+      Blynk.virtualWrite(V3, var4);
+      Blynk.virtualWrite(V4, var5);
+      Blynk.virtualWrite(V5, var6);
   }
 }
 
@@ -13576,6 +13590,8 @@ void manualMode(){
 }
 
 void setup() {
+    WiFi.begin(ssid, pass);
+    Blynk.config(BLYNK_AUTH_TOKEN);
     pinMode(BUTTON_A, INPUT_PULLUP);
     pinMode(BUTTON_B, INPUT_PULLUP);
     pinMode(BUTTON_C, INPUT_PULLUP);
@@ -13591,13 +13607,44 @@ void setup() {
 }
 
 void loop() {
+    Blynk.run();
     getButton();
-    uartUpdate();
+    sensorUpdate();
     numbersProcess();
     if(sysMode == 2){
       autoMode();
     }
-    else{
+    else if(sysMode == 4){
       manualMode();
+    }
+    else{
+      digitalWrite(RELAY01, 1);
+      digitalWrite(RELAY02, 1);
+    }
+
+    if(lastSysMode != sysMode)
+    {
+      displayOnTFT();
+      lastSysMode = sysMode;
+    }
+}
+
+BLYNK_WRITE(V6)
+{
+  if(param.asInt() == 1){
+    sysMode = 2;
+  }
+}
+
+BLYNK_WRITE(V7)
+{
+    blynkVar1 = param.asInt();
+    if(blynkVar1 == 1){
+      sysMode = 4;
+      ionModuleMode = 1;
+    }
+    else{
+      sysMode = 6;
+      ionModuleMode = 0;
     }
 }
