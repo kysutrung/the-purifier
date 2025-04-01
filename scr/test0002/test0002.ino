@@ -4,9 +4,11 @@
 #include <pgmspace.h>  // Để đọc dữ liệu từ PROGMEM
 
 #define BLYNK_PRINT Serial
-#define BLYNK_TEMPLATE_ID "TMPL6NK5VD67Q"
+
+#define BLYNK_TEMPLATE_ID "TMPL6Ie5TaKJK"
 #define BLYNK_TEMPLATE_NAME "May Loc Khong Khi IOT"
-#define BLYNK_AUTH_TOKEN "6DtBQn6E-KvSZOnjofDFNpBAZQFlTFZf"
+#define BLYNK_AUTH_TOKEN "p-412yMNAwKmMbgNluMIuyJu_-Mk3LHG"
+
 #include <BlynkSimpleEsp32.h>
 #include <WiFi.h>
 
