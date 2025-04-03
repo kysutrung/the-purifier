@@ -1,3 +1,21 @@
 # Dự Án: Máy Làm Sạch Không Khí IOT
 
-![Ảnh mô hình thực tế](https://github.com/kysutrung/3_dof_robot_arm_computer_vision/blob/main/b6f08af6850f35516c1e.jpg)
+## Sơ đồ đấu nối
+
+![Ảnh mô hình thực tế](https://github.com/kysutrung/the-purifier/blob/main/media/115.png)
+
+## Sơ đồ mạch in
+
+![Ảnh mô hình thực tế](https://github.com/kysutrung/the-purifier/blob/main/media/116.png)
+
+## Bản thiết kế vỏ sản phẩm
+
+![Ảnh mô hình thực tế](https://github.com/kysutrung/the-purifier/blob/main/media/fileCadVoNhua.png)
+
+## Giao diện màn hình điều khiển
+
+![Ảnh mô hình thực tế](https://github.com/kysutrung/the-purifier/blob/main/media/anh%20giao%20dien%20dieu%20khien.jpg)
+
+## Ảnh thực tế của sản phẩm
+
+![Ảnh mô hình thực tế](https://github.com/kysutrung/the-purifier/blob/main/media/anh%20san%20pham.jpg)
