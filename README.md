@@ -21,4 +21,4 @@
 ![Ảnh mô hình thực tế](https://github.com/kysutrung/the-purifier/blob/main/media/anh%20san%20pham.jpg)
 
 ## [Code nạp cho Arduino Mega ở đây.](https://github.com/kysutrung/the-purifier/tree/main/scr/for_arduino_mega)
-## [Code nạp cho ESP32 ở đây](https://github.com/kysutrung/the-purifier/tree/main/scr/for_esp32)
+## [Code nạp cho ESP32 ở đây.](https://github.com/kysutrung/the-purifier/tree/main/scr/for_esp32)
