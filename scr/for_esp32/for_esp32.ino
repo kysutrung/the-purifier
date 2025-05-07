@@ -13467,9 +13467,9 @@ bool receiveFloatArray(float* buffer) {
 }
 
 void updateVariables(float* buffer) {
-    var1 = buffer[0]; //AQI
-    var2 = buffer[1]; //TVOC
-    var3 = buffer[2]; //ECO2
+    var1 = buffer[0] * 35; //AQI
+    var2 = buffer[1] / 200; //TVOC
+    var3 = buffer[2] * 5; //ECO2
     var4 = buffer[3]; //nhiet do
     var5 = buffer[4]; //do am
     var6 = buffer[5]; //bui
@@ -13568,9 +13568,16 @@ void numbersProcess(){
   if (var6 > 1.5) {
       airState = 1;
   }
+  else{
+    airState = 0;
+  }
 
-  if (var2 > 660 || var3 > 1000) {
+  if (var2 > 3 || var3 > 5000) {
       airState = 2;
+  }
+
+  if (var6 <= 1.5 && var2 <= 660 && var3 <= 1000) {
+      airState = 0;
   }
 
   if (var6 <= 1.5 && var2 <= 660 && var3 <= 1000) {
